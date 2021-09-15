@@ -20,10 +20,18 @@ Route::get('/', function () {
 
 Route::get('posts/{post}', function ($slug) {
 
+	$path = __DIR__ . "/../resources/posts/{$slug}.html";
 
-	$post = file_get_contents();
+	if (!file_exists($path)) {
+		abort(404);
+	}
+
+	$post = cache()->remember("post.{$slug}", now()->addHour(1), function () use ($path) {
+		return file_get_contents($path);
+	});
+
 
 	return view('post', [
 		'post' => $post
 	]);
-});
+})->where('posts', '[A-z_\-]+');
