@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
+use \Spatie\YamlFrontMatter\YamlFrontMatter;
+use Illuminate\Support\Facades\File;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,14 +17,17 @@ use App\Models\Post;
 */
 
 Route::get('/', function () {
-	return view('posts');
+
+   $posts = Post::all();
+
+    return view('posts', [
+        'post' => $posts
+    ]);
 });
 
 
 Route::get('posts/{post}', function ($slug) {
-
-
-	$post = post::find($slug);
-
-	return view('post', ['post' => $post]);
+    return view('post', [
+        'post' => post::find($slug)
+    ]);
 })->where('posts', '[A-z_\-]+');
